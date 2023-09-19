@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import '../dummy_data.dart';
+import '../providers/meal_provider.dart';
 
 class MealDetalScreen extends StatelessWidget {
   static const routeName = 'mealdetals';
-  final Function toggleFavorite;
-  final Function isMealFavorit;
 
-  const MealDetalScreen(this.toggleFavorite, this.isMealFavorit, {super.key});
+  const MealDetalScreen({super.key});
   Widget buildSectionRitle(BuildContext context, String title) {
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 10),
@@ -84,9 +84,12 @@ class MealDetalScreen extends StatelessWidget {
       ),
       //لحذف الوجبة
       floatingActionButton: FloatingActionButton(
-        onPressed: () => toggleFavorite(mealId),
+        onPressed: () => Provider.of<MealProvider>(context, listen: false)
+            .toggleFavorite(mealId),
         child: Icon(
-          isMealFavorit(mealId) ? Icons.star : Icons.star_border,
+          Provider.of<MealProvider>(context, listen: true).isMealFavorit(mealId)
+              ? Icons.star
+              : Icons.star_border,
           color: Colors.black,
         ),
       ),

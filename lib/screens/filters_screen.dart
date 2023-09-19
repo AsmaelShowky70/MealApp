@@ -1,32 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import '../providers/meal_provider.dart';
 import '../wedgets/main_drawer.dart';
 
 class FiltersScreen extends StatefulWidget {
-  const FiltersScreen(this.saveFilters, this.currentFilter, {super.key});
+  const FiltersScreen({super.key});
 
   static const routeName = 'filterRoute';
-  final void Function(Map<String, bool>) saveFilters; // Change this line
-  final Map<String, bool> currentFilter;
 
   @override
   State<FiltersScreen> createState() => _FiltersScreenState();
 }
 
 class _FiltersScreenState extends State<FiltersScreen> {
-  bool isGlutenFree = false;
-  bool isLactoseFree = false;
-  bool isVegan = false;
-  bool isVegetarian = false;
-
-  @override
-  void initState() {
-    isGlutenFree = widget.currentFilter['gluten']!;
-    isLactoseFree = widget.currentFilter['lactose']!;
-    isVegan = widget.currentFilter['vegin']!;
-    isVegetarian = widget.currentFilter['vegetarin']!;
-    super.initState();
-  }
-
   Widget buildSwitchTile(String title, String description, bool currentValue,
       Function updateValue) {
     return SwitchListTile(
@@ -39,23 +25,11 @@ class _FiltersScreenState extends State<FiltersScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final Map<String, bool> currentFilter =
+        Provider.of<MealProvider>(context, listen: true).filters;
     return Scaffold(
       appBar: AppBar(
         title: const Text('Filters'),
-        actions: [
-          IconButton(
-            onPressed: () {
-              final selectedFilter = {
-                'gluten': isGlutenFree,
-                'lactose': isLactoseFree,
-                'vegin': isVegan,
-                'vegetarin': isVegetarian,
-              };
-              widget.saveFilters(selectedFilter);
-            },
-            icon: const Icon(Icons.save),
-          ),
-        ],
       ),
       body: Column(
         children: [
@@ -74,41 +48,49 @@ class _FiltersScreenState extends State<FiltersScreen> {
                 buildSwitchTile(
                   'Gluten-Free',
                   'Only Include Gluten Free Meal',
-                  isGlutenFree,
+                  currentFilter['gluten']!,
                   (newValu) {
                     setState(() {
-                      isGlutenFree = newValu;
+                      currentFilter['gluten'] = newValu;
                     });
+                    Provider.of<MealProvider>(context, listen: false)
+                        .setFilters();
                   },
                 ),
                 buildSwitchTile(
                   'Lactose-Free',
                   'Only Include Lactose Free Meal',
-                  isLactoseFree,
+                  currentFilter['lactose']!,
                   (newValu) {
                     setState(() {
-                      isLactoseFree = newValu;
+                      currentFilter['lactose'] = newValu;
                     });
+                    Provider.of<MealProvider>(context, listen: false)
+                        .setFilters();
                   },
                 ),
                 buildSwitchTile(
                   'Vegane',
                   'Only Include Vegane Meal',
-                  isVegan,
+                  currentFilter['vegin']!,
                   (newValu) {
                     setState(() {
-                      isVegan = newValu;
+                      currentFilter['vegin'] = newValu;
                     });
+                    Provider.of<MealProvider>(context, listen: false)
+                        .setFilters();
                   },
                 ),
                 buildSwitchTile(
                   'Vegetarian',
                   'Only Include isVegetarian Meal',
-                  isVegetarian,
+                  currentFilter['vegetarin']!,
                   (newValu) {
                     setState(() {
-                      isVegetarian = newValu;
+                      currentFilter['vegetarin'] = newValu;
                     });
+                    Provider.of<MealProvider>(context, listen: false)
+                        .setFilters();
                   },
                 ),
               ],
